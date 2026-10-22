@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <string.h>
+
+int main() {
+    int shmid;
+    char *str;
+
+    // Create shared memory
+    shmid = shmget(IPC_PRIVATE, 1024,  IPC_CREAT | 0666);
+
+    // Attach shared memory
+    str = (char *) shmat(shmid, NULL, 0);
+
+    // Write data
+    strcpy(str, "Hello from shared memory!");
+    printf("Written: %s\n", str);
+
+    // Read data
+    printf("Read: %s\n", str);
+
+    // Detach shared memory
+    shmdt(str);
+
+    // Remove shared memory
+    shmctl(shmid, IPC_RMID, NULL);
+
+    return 0;
+}
