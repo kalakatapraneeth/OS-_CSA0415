@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+
+int main()
+{
+    int fd;
+    char buffer[100];
+    char data[] = "Hello UNIX";
+
+    // Create and open file
+    fd = open("test.txt", O_CREAT | O_RDWR, 0644);
+
+    // Write data
+    write(fd, data, strlen(data));
+
+    // Move pointer to beginning
+    lseek(fd, 0, SEEK_SET);
+
+    // Read data
+    int n = read(fd, buffer, 99);
+    buffer[n] = '\0';
+
+    printf("File content: %s\n", buffer);
+
+    // Close file
+    close(fd);
+
+    // Delete file
+    unlink("test.txt");
+
+    return 0;
+}
